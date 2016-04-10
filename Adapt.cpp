@@ -56,6 +56,14 @@ int Adapt::asymp() {
   return (int) av;
 }
 
+int Adapt::asymp_2() {
+  long av = 0;
+  for(int i = 0; i < _count; i++)
+    av += (long)pow(_count -i, 1.5)*(long)_set[i]*_set[i];
+  av = sqrt(av) / ((long)pow(_count, (2.0/3.0)) * 2.15);
+  return (int) av;
+}
+
 int Adapt:: newest() {
   return _set[0];
 }

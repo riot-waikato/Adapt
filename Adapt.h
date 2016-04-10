@@ -13,7 +13,7 @@ class Adapt {
   int nonlinear();
   int exponential();
   int asymp();
-
+  int asymp_2();
   int newest();
   int oldest();
  private:
