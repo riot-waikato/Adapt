@@ -17,16 +17,15 @@ void Adapt::insert(int value) {
 }
 
 int Adapt::average() {
-  float av = 0;
+  long av = 0;
   for(int i = 0; i < _count; i++)
     av += _set[i];
   av/= _count;
-  return av;
+  return (int)av;
 }
 
-
 int Adapt::weighted() { //euclidean distance
-  float av = 0;
+  long av = 0;
   for(int i = 0; i < _count; i++)
     av += _set[i]*_set[i];
   av = sqrt(av) / sqrt(_count);
@@ -34,7 +33,7 @@ int Adapt::weighted() { //euclidean distance
 }
 
 int Adapt::nonlinear() { //ordered euclidian distance
-  float av = 0;
+  long av = 0;
   for(int i = 0; i < _count; i++)
     av +=(_count - i)*_set[i]*_set[i];
   av = sqrt(av) / (sqrt(_count)*1.5);
@@ -42,10 +41,18 @@ int Adapt::nonlinear() { //ordered euclidian distance
 }
 
 int Adapt::exponential() { //unordered euclidian distance
-  float av = 0;
+  long av = 0;
   for(int i = 0; i < _count; i++)
-    av +=sqrt(_count - 1)*_set[i]*_set[i];
+    av +=(sqrt(_count - 1)*_set[i]*_set[i]);
   av = sqrt(av) / (sqrt(_count)*sqrt(1.75));
+  return (int) av;
+}
+
+int Adapt::asymp() {
+  long av = 0;
+  for(int i = 0; i < _count; i++)
+    av += (_count - 1)*(_count - 1)*(long)_set[i]*_set[i];
+  av = sqrt(av) / (_count * 2);
   return (int) av;
 }
 

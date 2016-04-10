@@ -12,6 +12,7 @@ class Adapt {
   int weighted();
   int nonlinear();
   int exponential();
+  int asymp();
 
   int newest();
   int oldest();
