@@ -1,8 +1,7 @@
 #include "Adapt.h"
 #include "Arduino.h"
-#ifndef MIN(X, Y)
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
-#endif
+#define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
 Adapt::Adapt(int resolution) {
   _resolution = MIN(resolution, 10);
@@ -48,7 +47,7 @@ int Adapt::exponential() { //unordered euclidian distance
   return (int) av;
 }
 
-int Adapt::asymp() {
+int Adapt::asymp() { //taking sharp asymptote
   long av = 0;
   for(int i = 0; i < _count; i++)
     av += (_count - 1)*(_count - 1)*(long)_set[i]*_set[i];
@@ -56,10 +55,20 @@ int Adapt::asymp() {
   return (int) av;
 }
 
-int Adapt::asymp_2() {
+int Adapt::asymp_2() { //modest asymptote
   long av = 0;
-  for(int i = 0; i < _count; i++)
-    av += (long)pow(_count -i, 1.5)*(long)_set[i]*_set[i];
+  bool select = false;
+  for(int i = 0; i < _count; i++) {
+    if(!select && i < _count + 1)
+      if(((float)MIN(_set[i], _set[i + 1]) / (float)MAX(_set[i], _set[i+1])) > 0.8 && abs(_set[i] - _set[i + 1]) > 10) {
+	av += (long)pow(_count -i, 1.5)*(long)_set[i + 1]*_set[i + 1];
+	select = true;
+      }
+      else
+	av += (long)pow(_count -i, 1.5)*(long)_set[i]*_set[i];
+    else
+      av += (long)pow(_count -i, 1.5)*(long)_set[i]*_set[i];
+  }
   av = sqrt(av) / ((long)pow(_count, (2.0/3.0)) * 2.15);
   return (int) av;
 }
